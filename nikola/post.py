@@ -1035,12 +1035,14 @@ class Post(object):
         if lang is None:
             lang = nikola.utils.LocaleBorg().current_lang
         folder = self.folders[lang]
+
+        translated_slug = self.meta[lang]['translated-slug'] if 'translated-slug' in self.meta[lang] else self.meta[lang]['slug']
         if self.has_pretty_url(lang):
             path = os.path.join(self.translations[lang],
-                                folder, self.meta[lang]['slug'], 'index' + extension)
+                                folder, translated_slug, 'index' + extension)
         else:
             path = os.path.join(self.translations[lang],
-                                folder, self.meta[lang]['slug'] + extension)
+                                folder, translated_slug, + extension)
         if sep != os.sep:
             path = path.replace(os.sep, sep)
         if path.startswith('./'):
@@ -1058,10 +1060,12 @@ class Post(object):
 
         pieces = self.translations[lang].split(os.sep)
         pieces += self.folders[lang].split(os.sep)
+
+        translated_slug = self.meta[lang]['translated-slug'] if 'translated-slug' in self.meta[lang] else self.meta[lang]['slug']
         if self.has_pretty_url(lang):
-            pieces += [self.meta[lang]['slug'], 'index' + extension]
+            pieces += [translated_slug, 'index' + extension]
         else:
-            pieces += [self.meta[lang]['slug'] + extension]
+            pieces += [translated_slug + extension]
         pieces = [_f for _f in pieces if _f and _f != '.']
         link = '/' + '/'.join(pieces)
         if absolute:
